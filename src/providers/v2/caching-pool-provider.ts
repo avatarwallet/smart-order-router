@@ -1,5 +1,5 @@
-import { ChainId, Token } from '@uniswap/sdk-core';
-import { Pair } from '@uniswap/v2-sdk';
+import { Pair } from '@xeiswap/v2-sdk';
+import { ChainId, Token } from '@xeiswap/sdk-core';
 import _ from 'lodash';
 
 import { log } from '../../util/log';

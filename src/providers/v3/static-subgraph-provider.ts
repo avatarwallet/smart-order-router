@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { ChainId, Token } from '@uniswap/sdk-core';
-import { FeeAmount, Pool } from '@uniswap/v3-sdk';
+import { ChainId, Token } from '@xeiswap/sdk-core';
+import { FeeAmount, Pool } from '@xeiswap/v3-sdk';
 import JSBI from 'jsbi';
 import _ from 'lodash';
 
@@ -61,7 +61,7 @@ import {
   WETH_POLYGON,
   WMATIC_POLYGON,
   WMATIC_POLYGON_MUMBAI,
-  WXDAI_GNOSIS
+  WXDAI_GNOSIS,
 } from '../token-provider';
 
 import { IV3PoolProvider } from './pool-provider';
@@ -166,6 +166,8 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   [ChainId.ZORA_SEPOLIA]: [WRAPPED_NATIVE_CURRENCY[ChainId.ZORA_SEPOLIA]!],
   [ChainId.ROOTSTOCK]: [WRAPPED_NATIVE_CURRENCY[ChainId.ROOTSTOCK]!],
   [ChainId.BLAST]: [WRAPPED_NATIVE_CURRENCY[ChainId.BLAST]!, USDB_BLAST],
+  [ChainId.BSC_TEST]: [WRAPPED_NATIVE_CURRENCY[ChainId.BSC_TEST]!],
+  [ChainId.SEI_TEST]: [WRAPPED_NATIVE_CURRENCY[ChainId.SEI_TEST]!],
 };
 
 /**

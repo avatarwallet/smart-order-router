@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { ZERO } from '@uniswap/router-sdk';
-import { Fraction, TradeType } from '@uniswap/sdk-core';
+import { ZERO } from '@xeiswap/router-sdk';
+import { Fraction, TradeType } from '@xeiswap/sdk-core';
 
 import {
   RouteWithValidQuote,
@@ -216,7 +216,7 @@ export class PortionProvider implements IPortionProvider {
 
       // This is a sub-optimal solution agreed among the teams to work around the exact in
       // portion amount issue for universal router.
-      // The most optimal solution is to update router-sdk https://github.com/Uniswap/router-sdk/blob/main/src/entities/trade.ts#L215
+      // The most optimal solution is to update router-sdk https://github.com/xeiswap/router-sdk/blob/main/src/entities/trade.ts#L215
       // `minimumAmountOut` to include portionBips as well, `public minimumAmountOut(slippageTolerance: Percent, amountOut = this.outputAmount, portionBips: Percent)
       // but this will require a new release of router-sdk, and bump router-sdk versions in across downstream dependencies across the stack.
       // We opt to use this sub-optimal solution for now, and revisit the optimal solution in the future.

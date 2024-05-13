@@ -1,6 +1,6 @@
-import { Protocol } from '@uniswap/router-sdk';
-import { Token } from '@uniswap/sdk-core';
-import { Pool } from '@uniswap/v3-sdk';
+import { Protocol } from '@xeiswap/router-sdk';
+import { Token } from '@xeiswap/sdk-core';
+import { Pool } from '@xeiswap/v3-sdk';
 
 import { MixedRoute, V2Route, V3Route } from '../../../../routers';
 
