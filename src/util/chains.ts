@@ -24,8 +24,8 @@ export const SUPPORTED_CHAINS: ChainId[] = [
   ChainId.AVALANCHE,
   ChainId.BASE,
   ChainId.BLAST,
-  ChainId.BSC_TEST,
-  ChainId.SEI_TEST,
+  ChainId.BSC_TESTNET,
+  ChainId.SEI_TESTNET,
   // Gnosis and Moonbeam don't yet have contracts deployed yet
 ];
 
@@ -129,6 +129,8 @@ export enum ChainName {
   BASE = 'base-mainnet',
   BASE_GOERLI = 'base-goerli',
   BLAST = 'blast-mainnet',
+  BSC_TESTNET = 'bsc-testnet',
+  SEI_TESTNET = 'sei-testnet',
 }
 
 export enum NativeCurrencyName {
@@ -140,6 +142,7 @@ export enum NativeCurrencyName {
   MOONBEAM = 'GLMR',
   BNB = 'BNB',
   AVALANCHE = 'AVAX',
+  SEI = 'SEI',
 }
 
 export const NATIVE_NAMES_BY_ID: { [chainId: number]: string[] } = {
@@ -213,6 +216,16 @@ export const NATIVE_NAMES_BY_ID: { [chainId: number]: string[] } = {
     'ETHER',
     '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   ],
+  [ChainId.BSC_TESTNET]: [
+    'BNB',
+    'BNB',
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  ],
+  [ChainId.SEI_TESTNET]: [
+    'SEI',
+    'SEI',
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  ],
 };
 
 export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {
@@ -235,6 +248,8 @@ export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {
   [ChainId.AVALANCHE]: NativeCurrencyName.AVALANCHE,
   [ChainId.BASE]: NativeCurrencyName.ETHER,
   [ChainId.BLAST]: NativeCurrencyName.ETHER,
+  [ChainId.BSC_TESTNET]: NativeCurrencyName.BNB,
+  [ChainId.SEI_TESTNET]: NativeCurrencyName.SEI,
 };
 
 export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
@@ -279,6 +294,10 @@ export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
       return ChainName.BASE_GOERLI;
     case 81457:
       return ChainName.BLAST;
+    case 97:
+      return ChainName.BSC_TESTNET;
+    case 713715:
+      return ChainName.SEI_TESTNET;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -493,16 +512,16 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId in ChainId]: Token } = {
     'WETH',
     'Wrapped Ether'
   ),
-  [ChainId.BSC_TEST]: new Token(
-    ChainId.BSC_TEST,
+  [ChainId.BSC_TESTNET]: new Token(
+    ChainId.BSC_TESTNET,
     '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
     18,
     'WBNB',
     'Wrapped BNB'
   ),
-  [ChainId.SEI_TEST]: new Token(
-    ChainId.SEI_TEST,
-    '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
+  [ChainId.SEI_TESTNET]: new Token(
+    ChainId.SEI_TESTNET,
+    '0xE243244c5B04e414151bDE722e0bFb381c899922',
     18,
     'WSEI',
     'Wrapped SEI'
@@ -657,6 +676,53 @@ class AvalancheNativeCurrency extends NativeCurrency {
   }
 }
 
+function isBscTestnet(chainId: number): chainId is ChainId.BSC_TESTNET {
+  return chainId === ChainId.BSC_TESTNET;
+}
+
+function isSeiTestnet(chainId: number): chainId is ChainId.SEI_TESTNET {
+  return chainId === ChainId.SEI_TESTNET;
+}
+class BscTestnetNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId;
+  }
+
+  get wrapped(): Token {
+    if (!isBscTestnet(this.chainId)) throw new Error('Not bnb');
+    const nativeCurrency = WRAPPED_NATIVE_CURRENCY[this.chainId];
+    if (nativeCurrency) {
+      return nativeCurrency;
+    }
+    throw new Error(`Does not support this chain ${this.chainId}`);
+  }
+
+  public constructor(chainId: number) {
+    if (!isBscTestnet(chainId)) throw new Error('Not bnb');
+    super(chainId, 18, 'BNB', 'BNB');
+  }
+}
+
+class SeiTestnetNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId;
+  }
+
+  get wrapped(): Token {
+    if (!isSeiTestnet(this.chainId)) throw new Error('Not sei');
+    const nativeCurrency = WRAPPED_NATIVE_CURRENCY[this.chainId];
+    if (nativeCurrency) {
+      return nativeCurrency;
+    }
+    throw new Error(`Does not support this chain ${this.chainId}`);
+  }
+
+  public constructor(chainId: number) {
+    if (!isSeiTestnet(chainId)) throw new Error('Not sei');
+    super(chainId, 18, 'SEI', 'SEI');
+  }
+}
+
 export class ExtendedEther extends Ether {
   public get wrapped(): Token {
     if (this.chainId in WRAPPED_NATIVE_CURRENCY) {
@@ -694,6 +760,10 @@ export function nativeOnChain(chainId: number): NativeCurrency {
     cachedNativeCurrency[chainId] = new BnbNativeCurrency(chainId);
   } else if (isAvax(chainId)) {
     cachedNativeCurrency[chainId] = new AvalancheNativeCurrency(chainId);
+  } else if (isBscTestnet(chainId)) {
+    cachedNativeCurrency[chainId] = new BscTestnetNativeCurrency(chainId);
+  } else if (isSeiTestnet(chainId)) {
+    cachedNativeCurrency[chainId] = new SeiTestnetNativeCurrency(chainId);
   } else {
     cachedNativeCurrency[chainId] = ExtendedEther.onChain(chainId);
   }
