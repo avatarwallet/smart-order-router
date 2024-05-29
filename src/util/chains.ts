@@ -131,6 +131,7 @@ export enum ChainName {
   BLAST = 'blast-mainnet',
   BSC_TESTNET = 'bsc-testnet',
   SEI_TESTNET = 'sei-testnet',
+  SEI = 'sei-mainnet',
 }
 
 export enum NativeCurrencyName {
@@ -522,6 +523,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId in ChainId]: Token } = {
   [ChainId.SEI_TESTNET]: new Token(
     ChainId.SEI_TESTNET,
     '0xE243244c5B04e414151bDE722e0bFb381c899922',
+    18,
+    'WSEI',
+    'Wrapped SEI'
+  ),
+  [ChainId.SEI]: new Token(
+    ChainId.SEI,
+    '0xE30feDd158A2e3b13e9badaeABaFc5516e95e8C7',
     18,
     'WSEI',
     'Wrapped SEI'

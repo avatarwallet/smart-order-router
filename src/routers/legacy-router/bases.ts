@@ -85,6 +85,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST = (
       WRAPPED_NATIVE_CURRENCY[ChainId.SEI_TESTNET]!,
       USDT_BNB,
     ],
+    [ChainId.SEI]: [WRAPPED_NATIVE_CURRENCY[ChainId.SEI]!],
   };
 };
 
