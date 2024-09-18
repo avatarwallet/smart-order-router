@@ -114,6 +114,7 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   [ChainId.BSC_TESTNET]: [WRAPPED_NATIVE_CURRENCY[ChainId.BSC_TESTNET]!],
   [ChainId.SEI_TESTNET]: [WRAPPED_NATIVE_CURRENCY[ChainId.SEI_TESTNET]!],
   [ChainId.SEI]: [],
+  [ChainId.OPBNB]: [],
 };
 
 /**

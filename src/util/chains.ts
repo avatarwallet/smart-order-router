@@ -132,6 +132,7 @@ export enum ChainName {
   BSC_TESTNET = 'bsc-testnet',
   SEI_TESTNET = 'sei-testnet',
   SEI = 'sei-mainnet',
+  OPBNB = 'opBNB',
 }
 
 export enum NativeCurrencyName {
@@ -534,6 +535,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId in ChainId]: Token } = {
     'WSEI',
     'Wrapped SEI'
   ),
+  [ChainId.OPBNB]: new Token(
+    ChainId.OPBNB,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WBNB',
+    'Wrapped BNB'
+  ),
 };
 
 function isMatic(
@@ -731,6 +739,30 @@ class SeiTestnetNativeCurrency extends NativeCurrency {
   }
 }
 
+function isOpBNB(chainId: number): chainId is ChainId.OPBNB {
+  return chainId === ChainId.OPBNB;
+}
+
+class OpBNBNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId;
+  }
+
+  get wrapped(): Token {
+    if (!isOpBNB(this.chainId)) throw new Error('Not opBNB');
+    const nativeCurrency = WRAPPED_NATIVE_CURRENCY[this.chainId];
+    if (nativeCurrency) {
+      return nativeCurrency;
+    }
+    throw new Error(`Does not support this chain ${this.chainId}`);
+  }
+
+  public constructor(chainId: number) {
+    if (!isOpBNB(chainId)) throw new Error('Not opBNB');
+    super(chainId, 18, 'BNB', 'BNB');
+  }
+}
+
 export class ExtendedEther extends Ether {
   public get wrapped(): Token {
     if (this.chainId in WRAPPED_NATIVE_CURRENCY) {
@@ -772,6 +804,8 @@ export function nativeOnChain(chainId: number): NativeCurrency {
     cachedNativeCurrency[chainId] = new BscTestnetNativeCurrency(chainId);
   } else if (isSeiTestnet(chainId)) {
     cachedNativeCurrency[chainId] = new SeiTestnetNativeCurrency(chainId);
+  } else if (isOpBNB(chainId)) {
+    cachedNativeCurrency[chainId] = new OpBNBNativeCurrency(chainId);
   } else {
     cachedNativeCurrency[chainId] = ExtendedEther.onChain(chainId);
   }

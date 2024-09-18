@@ -266,6 +266,13 @@ export const WETH9: {
     'WSEI',
     'Wrapped SEI'
   ),
+  [ChainId.OPBNB]: new Token(
+    ChainId.OPBNB,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WBNB',
+    'Wrapped BNB'
+  ),
 };
 
 export const BEACON_CHAIN_DEPOSIT_ADDRESS =
